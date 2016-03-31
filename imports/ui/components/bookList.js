@@ -6,7 +6,7 @@ const BookList = (props) => (
     {props.books.map(book =>
       <Book
         key={book._id}
-        {...book}
+        book={book}
       />)}
   </div>
 );

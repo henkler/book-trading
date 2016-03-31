@@ -9,24 +9,24 @@ class Book extends React.Component {
 
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
   }
-  
-  handleDeleteClick(event) {
-    remove.call({ bookId: this.props._id });
+
+  handleDeleteClick() {
+    remove.call({ bookId: this.props.book._id });
   }
 
   render() {
     return (
       <div>
-        <h1>{this.props.title}</h1>
+        <h1>{this.props.book.title}</h1>
         <button onClick={ this.handleDeleteClick }>Delete</button>
-        <Link to={`/books/${this.props._id}`}>Edit</Link>
+        <Link to={`/books/${this.props.book._id}`}>Edit</Link>
       </div>
     );
   }
 }
 
 Book.propTypes = {
-  title: React.PropTypes.string
+  book: React.PropTypes.object
 };
 
 export default Book;
