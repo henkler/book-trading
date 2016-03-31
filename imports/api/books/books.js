@@ -1,5 +1,5 @@
-/* global SimpleSchema: false*/
 import { Mongo } from 'meteor/mongo';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 export const Books = new Mongo.Collection('books');
 
@@ -15,18 +15,29 @@ Books.deny({
   remove() { return true; }
 });
 
-const BooksSchema = new SimpleSchema({
+Books.schema = new SimpleSchema({
   title: {
     type: String,
     label: 'Title'
   },
+  userId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id
+  },
   createdAt: {
     type: Date,
-    label: 'The date this checkin was created',
+    label: 'The date this Book was created',
+    denyUpdate: true,
     autoValue() {
       return new Date();
     }
   }
 });
 
-Books.attachSchema(BooksSchema);
+Books.helpers({
+  editableBy(userId) {
+    return this.userId === userId;
+  }
+});
+
+Books.attachSchema(Books.schema);

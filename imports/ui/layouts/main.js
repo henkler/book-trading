@@ -2,7 +2,7 @@ import React from 'react';
 import AppBar from 'material-ui/lib/app-bar';
 import AccountsUIWrapper from '../components/accountsUIWrapper';
 
-export const MainLayout = ({ children }) => (
+const MainLayout = ({ children }) => (
   <div>
     <AppBar
       title="Book Trading App"
@@ -16,3 +16,5 @@ export const MainLayout = ({ children }) => (
 MainLayout.propTypes = {
   children: React.PropTypes.object
 };
+
+export default MainLayout;

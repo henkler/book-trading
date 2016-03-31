@@ -21,3 +21,5 @@ accounts-github
 accounts-ui
 service-configuration
 blaze-html-templates
+mdg:validated-method
+dburles:collection-helpers
