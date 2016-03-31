@@ -10,11 +10,40 @@ export const insert = new ValidatedMethod({
     title: { type: String }
   }).validator(),
   run({ title }) {
+    if (!this.userId) {
+      throw new Meteor.Error('books.insert.accessDenied',
+        'Must be logged in to add a book');
+    }
+
     const book = {
-      title
+      title,
+      userId: this.userId
     };
 
     Books.insert(book);
+  }
+});
+
+export const update = new ValidatedMethod({
+  name: 'books.update',
+  validate: new SimpleSchema({
+    bookId: { type: String },
+    title: { type: String }
+  }).validator(),
+  run({ bookId, title }) {
+    const book = Books.findOne(bookId);
+
+    if (!book) {
+      throw new Meteor.Error('books.remove.accessDenied',
+        'Unable to find book');
+    }
+
+    if (!book.editableBy(this.userId)) {
+      throw new Meteor.Error('books.remove.accessDenied',
+        'Cannot remove a book you do not own');
+    }
+
+    Books.update(book, { $set: { title } });
   }
 });
 
@@ -25,6 +54,11 @@ export const remove = new ValidatedMethod({
   }).validator(),
   run({ bookId }) {
     const book = Books.findOne(bookId);
+
+    if (!book) {
+      throw new Meteor.Error('books.remove.accessDenied',
+        'Unable to find book');
+    }
 
     if (!book.editableBy(this.userId)) {
       throw new Meteor.Error('books.remove.accessDenied',
