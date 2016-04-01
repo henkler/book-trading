@@ -23,3 +23,4 @@ service-configuration
 blaze-html-templates
 mdg:validated-method
 dburles:collection-helpers
+fourseven:scss
