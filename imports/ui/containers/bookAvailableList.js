@@ -5,7 +5,7 @@ import { Books } from '/imports/api/books/books';
 import BookList from '../components/bookList';
 
 const composer = (props, onData) => {
-  if (Meteor.subscribe('books').ready()) {
+  if (Meteor.subscribe('booksAvailable', props.title).ready()) {
     const books = Books.find().fetch();
     onData(null, { books });
   }

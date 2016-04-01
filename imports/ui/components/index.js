@@ -1,6 +1,7 @@
 import React from 'react';
-import BookList from '../containers/bookList';
 
-export const Index = () => (
-  <BookList />
+const Index = () => (
+  <h1>Index</h1>
 );
+
+export default Index;

@@ -16,8 +16,7 @@ export const insert = new ValidatedMethod({
     }
 
     const book = {
-      title,
-      userId: this.userId
+      title
     };
 
     Books.insert(book);
@@ -38,7 +37,7 @@ export const update = new ValidatedMethod({
         'Unable to find book');
     }
 
-    if (!book.editableBy(this.userId)) {
+    if (!book.editableByCurrentUser()) {
       throw new Meteor.Error('books.remove.accessDenied',
         'Cannot remove a book you do not own');
     }
@@ -60,7 +59,7 @@ export const remove = new ValidatedMethod({
         'Unable to find book');
     }
 
-    if (!book.editableBy(this.userId)) {
+    if (!book.editableByCurrentUser()) {
       throw new Meteor.Error('books.remove.accessDenied',
         'Cannot remove a book you do not own');
     }

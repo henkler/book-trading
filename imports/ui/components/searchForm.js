@@ -1,13 +1,17 @@
 import React from 'react';
+import Paper from 'material-ui/lib/paper';
 import TextField from 'material-ui/lib/text-field';
 import FloatingActionButton from 'material-ui/lib/floating-action-button';
 import ActionSearch from 'material-ui/lib/svg-icons/action/search';
 
-import SearchList from '../containers/searchList';
-
 const styles = {
   button: {
     marginLeft: 20
+  },
+  paper: {
+    width: 350,
+    margin: 10,
+    padding: 10
   }
 };
 
@@ -15,45 +19,29 @@ class SearchForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      titleInput: null,
-      doSearch: false
-    };
-
-    this.handleSearchTitleChange = this.handleSearchTitleChange.bind(this);
     this.handleSearchClick = this.handleSearchClick.bind(this);
-  }
-
-  handleSearchTitleChange(event) {
-    let titleInput = event.target.value;
-    const doSearch = false;
-
-    if (!titleInput) {
-      titleInput = null;
-    }
-
-    this.setState({ titleInput, doSearch });
+    this.handleSearchKeyDown = this.handleSearchKeyDown.bind(this);
   }
 
   handleSearchClick() {
-    this.setState({ doSearch: true });
+    const titleInput = this.refs.searchTitle.getValue();
+    this.props.doSearch(titleInput);
   }
 
-  renderSearchList() {
-    if (this.state.doSearch) {
-      return <SearchList title={this.state.titleInput} />;
+  handleSearchKeyDown(event) {
+    if (event.keyCode == 13) {
+      this.handleSearchClick();
     }
   }
 
   render() {
     return (
-      <div>
+      <Paper style={styles.paper} zDepth={4}>
         <TextField
           name="searchTitleInput"
           ref="searchTitle"
-          value={this.state.titleInput}
-          onChange={this.handleSearchTitleChange}
           hintText="Type book title to search for..."
+          onKeyDown={this.handleSearchKeyDown}
         />
         <FloatingActionButton
           mini={true}
@@ -62,10 +50,13 @@ class SearchForm extends React.Component {
         >
           <ActionSearch />
         </FloatingActionButton>
-        {this.renderSearchList()}
-      </div>
+      </Paper>
     );
   }
 }
+
+SearchForm.propTypes = {
+  doSearch: React.PropTypes.func
+};
 
 export default SearchForm;

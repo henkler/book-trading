@@ -2,6 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
+import { insert } from '/imports/api/books/methods';
+
 export const Books = new Mongo.Collection('books');
 
 Books.allow({
@@ -23,7 +25,10 @@ Books.schema = new SimpleSchema({
   },
   userId: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id
+    regEx: SimpleSchema.RegEx.Id,
+    autoValue() {
+      return this.userId;
+    }
   },
   createdAt: {
     type: Date,
@@ -44,6 +49,9 @@ Books.schema = new SimpleSchema({
 Books.helpers({
   editableByCurrentUser() {
     return this.userId === Meteor.userId();
+  },
+  addBookToCollection() {
+    insert.call({ title: this.title });
   }
 });
 
