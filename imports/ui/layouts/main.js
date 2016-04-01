@@ -1,7 +1,7 @@
 import React from 'react';
 import AppBar from 'material-ui/lib/app-bar';
 import AccountsUIWrapper from '../components/accountsUIWrapper';
-import Navigation from '../components/navigation';
+import Navigation from './navigation';
 
 class MainLayout extends React.Component {
   constructor(props) {

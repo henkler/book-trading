@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
@@ -41,8 +42,8 @@ Books.schema = new SimpleSchema({
 });
 
 Books.helpers({
-  editableBy(userId) {
-    return this.userId === userId;
+  editableByCurrentUser() {
+    return this.userId === Meteor.userId();
   }
 });
 
