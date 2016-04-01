@@ -2,18 +2,14 @@ import React from 'react';
 import { Link } from 'react-router';
 import LeftNav from 'material-ui/lib/left-nav';
 import MenuItem from 'material-ui/lib/menus/menu-item';
-import RaisedButton from 'material-ui/lib/raised-button';
 import LibraryAdd from 'material-ui/lib/svg-icons/av/library-add';
 import LibraryBooks from 'material-ui/lib/svg-icons/av/library-books';
 
 const styles = {
-  navBar: {
-    top: 64
-  },
   link: {
-    textDecoration: "none"
+    textDecoration: 'none'
   }
-}
+};
 
 class Navigation extends React.Component {
   constructor(props) {
@@ -30,30 +26,29 @@ class Navigation extends React.Component {
   }
 
   handleClose() {
-    this.setState({open: false});
+    this.setState({ open: false });
   }
 
   render() {
     return (
       <LeftNav
-        containerStyle={styles.navBar}
         docked={false}
         width={200}
         open={this.state.open}
-        onRequestChange={open => this.setState({open})}
+        onRequestChange={open => this.setState({ open })}
       >
         <Link to="/mybooks" style={styles.link}>
-          <MenuItem leftIcon={<LibraryBooks />} onTouchTap={this.handleClose}>
+          <MenuItem leftIcon={<LibraryBooks />} onTouchTap={ this.handleClose }>
             My Books
           </MenuItem>
         </Link>
         <Link to="/books" style={styles.link}>
-          <MenuItem leftIcon={<LibraryAdd />} onTouchTap={this.handleClose}>
+          <MenuItem leftIcon={<LibraryAdd />} onTouchTap={ this.handleClose }>
             Available Books
           </MenuItem>
         </Link>
         <Link to="/books/add" style={styles.link}>
-          <MenuItem leftIcon={<LibraryAdd />} onTouchTap={this.handleClose}>
+          <MenuItem leftIcon={<LibraryAdd />} onTouchTap={ this.handleClose }>
             Add Search
           </MenuItem>
         </Link>

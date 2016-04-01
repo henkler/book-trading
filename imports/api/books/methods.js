@@ -7,19 +7,29 @@ import { Books } from './books';
 export const insert = new ValidatedMethod({
   name: 'books.insert',
   validate: new SimpleSchema({
-    title: { type: String }
+    title: { type: String },
+    author: { type: String },
+    thumbnail: { type: String },
+    description: { type: String },
+    publisher: { type: String },
+    pageCount: { type: Number }
   }).validator(),
-  run({ title }) {
+  run({ title, author, thumbnail, description, publisher, pageCount }) {
     if (!this.userId) {
       throw new Meteor.Error('books.insert.accessDenied',
         'Must be logged in to add a book');
     }
 
-    const book = {
-      title
+    const bookFields = {
+      title,
+      author,
+      thumbnail,
+      description,
+      publisher,
+      pageCount
     };
 
-    Books.insert(book);
+    Books.insert(bookFields);
   }
 });
 
@@ -27,9 +37,14 @@ export const update = new ValidatedMethod({
   name: 'books.update',
   validate: new SimpleSchema({
     bookId: { type: String },
-    title: { type: String }
+    title: { type: String },
+    author: { type: String },
+    thumbnail: { type: String },
+    description: { type: String },
+    publisher: { type: String },
+    pageCount: { type: Number }
   }).validator(),
-  run({ bookId, title }) {
+  run({ bookId, title, author, thumbnail, description, publisher, pageCount }) {
     const book = Books.findOne(bookId);
 
     if (!book) {
@@ -42,7 +57,16 @@ export const update = new ValidatedMethod({
         'Cannot remove a book you do not own');
     }
 
-    Books.update(book, { $set: { title } });
+    const bookFields = {
+      title,
+      author,
+      thumbnail,
+      description,
+      publisher,
+      pageCount
+    };
+
+    Books.update(book, { $set: bookFields });
   }
 });
 

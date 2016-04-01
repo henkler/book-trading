@@ -1,8 +1,17 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import Paper from 'material-ui/lib/paper';
+import TextField from 'material-ui/lib/text-field';
 
 import { insert } from '/imports/api/books/methods';
 import { update } from '/imports/api/books/methods';
+
+const styles = {
+  paper: {
+    width: 500,
+    margin: 10,
+    padding: 10
+  }
+};
 
 class BookForm extends React.Component {
   constructor(props) {
@@ -15,13 +24,28 @@ class BookForm extends React.Component {
     event.preventDefault();
 
     const bookId = this.props.book._id;
-    const title = ReactDOM.findDOMNode(this.refs.titleInput).value.trim();
+    const title = this.refs.titleInput.getValue().trim();
+    const author = this.refs.authorInput.getValue().trim();
+    const thumbnail = this.refs.thumbnailInput.getValue().trim();
+    const description = this.refs.descriptionInput.getValue().trim();
+    const publisher = this.refs.publisherInput.getValue().trim();
+    const pageCount = parseInt(this.refs.pageCountInput.getValue().trim());
+
+    const bookFields = {
+      title,
+      author,
+      thumbnail,
+      description,
+      publisher,
+      pageCount
+    };
 
     // if we have a bookId, do an update rather than insert
     if (bookId) {
-      update.call({ bookId, title });
+      bookFields.bookId = bookId;
+      update.call(bookFields);
     } else {
-      insert.call({ title });
+      insert.call(bookFields);
     }
 
     this.context.router.goBack();
@@ -29,15 +53,54 @@ class BookForm extends React.Component {
 
   render() {
     return (
-      <form onSubmit={ this.handleSubmit }>
-        <input
-          type="text"
-          ref="titleInput"
-          placeholder="Book Title"
-          defaultValue={ this.props.book.title }
-        />
-        <input type="submit" />
-      </form>
+      <Paper style={styles.paper} zDepth={4}>
+        <form onSubmit={ this.handleSubmit }>
+          <label>Title: </label>
+          <TextField
+            ref="titleInput"
+            hintText="Book Title"
+            defaultValue={ this.props.book.title }
+          />
+          <br />
+          <label>Author: </label>
+          <TextField
+            ref="authorInput"
+            hintText="Book Author"
+            defaultValue={ this.props.book.author }
+          />
+          <br />
+          <label>Thumbnail: </label>
+          <TextField
+            ref="thumbnailInput"
+            hintText="Book Thumbnail URL"
+            defaultValue={ this.props.book.thumbnail }
+          />
+          <br />
+          <label>Description: </label>
+          <TextField
+            ref="descriptionInput"
+            hintText="Book Description"
+            defaultValue={ this.props.book.description }
+            multiLine={true}
+          />
+          <br />
+          <label>Publisher: </label>
+          <TextField
+            ref="publisherInput"
+            hintText="Book Publisher"
+            defaultValue={ this.props.book.publisher }
+          />
+          <br />
+          <label>Page Count: </label>
+          <TextField
+            ref="pageCountInput"
+            hintText="Page Count"
+            defaultValue={ this.props.book.pageCount }
+          />
+          <br />
+          <input type="submit" />
+        </form>
+      </Paper>
     );
   }
 }

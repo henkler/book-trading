@@ -23,8 +23,8 @@ export function bookSearchByTitle(titleSearch) {
       const volume = item.volumeInfo;
       const title = volume.title;
       const author = volume.authors[0];
+      const description = volume.description;
       const publisher = volume.publisher;
-      const publishedDate = volume.publishedDate;
       const pageCount = volume.pageCount;
 
       let thumbnail = '';
@@ -35,7 +35,12 @@ export function bookSearchByTitle(titleSearch) {
 
       return {
         _id: new Mongo.ObjectID(),
-        title
+        title,
+        author,
+        thumbnail,
+        description,
+        publisher,
+        pageCount
       };
     });
   }
