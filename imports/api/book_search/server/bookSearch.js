@@ -5,7 +5,8 @@ const books = google.books('v1');
 function googleBookSearchByTitle(title, callback) {
   books.volumes.list({
     auth: Meteor.settings.google.api_key,
-    q: title
+    q: title,
+    maxResults: 20
   }, callback);
 }
 const wrappedGoogleBookSearchByTitle = Meteor.wrapAsync(googleBookSearchByTitle);
@@ -15,8 +16,8 @@ export function bookSearchByTitle(titleSearch) {
 
   let resultsList = [];
 
-  if (results) {
-    resultsList = results.map(item => {
+  if (results && results.items) {
+    resultsList = results.items.map(item => {
       const id = item.id;
       const volume = item.volumeInfo;
       const title = volume.title;
