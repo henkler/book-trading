@@ -25,6 +25,11 @@ Meteor.publish('booksAvailable', function books(title) {
 
 Meteor.publish('booksOwned', function books(title) {
   check(title, String);
+
+  if (!this.userId) {
+    return this.ready();
+  }
+
   const query = {};
 
   if (title) {
@@ -49,5 +54,5 @@ Meteor.publish('booksAddSearch', function books(title) {
     });
   }
 
-  this.ready();
+  return this.ready();
 });
