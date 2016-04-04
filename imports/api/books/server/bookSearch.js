@@ -19,7 +19,6 @@ export function bookSearchByTitle(titleSearch) {
 
   if (results && results.items) {
     resultsList = results.items.map(item => {
-      const id = item.id;
       const volume = item.volumeInfo;
       const title = volume.title;
       const author = volume.authors[0];

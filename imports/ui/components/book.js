@@ -1,11 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router';
 import Paper from 'material-ui/lib/paper';
-import Divider from 'material-ui/lib/divider';
 import Card from 'material-ui/lib/card/card';
 import CardActions from 'material-ui/lib/card/card-actions';
-import CardHeader from 'material-ui/lib/card/card-header';
-import CardMedia from 'material-ui/lib/card/card-media';
 import CardTitle from 'material-ui/lib/card/card-title';
 import FlatButton from 'material-ui/lib/flat-button';
 import CardText from 'material-ui/lib/card/card-text';
@@ -35,6 +31,7 @@ class Book extends React.Component {
     super(props);
 
     this.handleAddClick = this.handleAddClick.bind(this);
+    this.handleTradeClick = this.handleTradeClick.bind(this);
     this.handleEditClick = this.handleEditClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
   }
@@ -42,6 +39,10 @@ class Book extends React.Component {
   handleAddClick() {
     this.props.book.addBookToCollection();
     this.context.router.push('/mybooks');
+  }
+
+  handleTradeClick() {
+    this.props.book.requestTrade();
   }
 
   handleEditClick() {
@@ -69,6 +70,10 @@ class Book extends React.Component {
 
     if (actions.includes('add')) {
       actionButtons.push(<FlatButton key="action_add" label="Add to My Books" onClick={ this.handleAddClick } />);
+    }
+
+    if (actions.includes('trade')) {
+      actionButtons.push(<FlatButton key="action_trade" label="Request Trade" onClick={ this.handleTradeClick } />);
     }
 
     if (actionButtons.length > 0) {
@@ -106,7 +111,12 @@ class Book extends React.Component {
 }
 
 Book.propTypes = {
-  book: React.PropTypes.object.isRequired
+  book: React.PropTypes.object.isRequired,
+  actions: React.PropTypes.array
+};
+
+Book.defaultProps = {
+  actions: []
 };
 
 Book.contextTypes = {

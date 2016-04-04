@@ -29,7 +29,7 @@ class SearchForm extends React.Component {
   }
 
   handleSearchKeyDown(event) {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       this.handleSearchClick();
     }
   }

@@ -4,10 +4,6 @@ import { check } from 'meteor/check';
 import { Books } from '../books';
 import { bookSearchByTitle } from './bookSearch';
 
-Meteor.publish('books', function books() {
-  return Books.find();
-});
-
 Meteor.publish('booksAvailable', function books(title) {
   check(title, String);
   const query = {};
@@ -19,6 +15,8 @@ Meteor.publish('booksAvailable', function books(title) {
   if (this.userId) {
     query.userId = { $ne: this.userId };
   }
+
+  query.traded = false;
 
   return Books.find(query);
 });
@@ -39,6 +37,30 @@ Meteor.publish('booksOwned', function books(title) {
   if (this.userId) {
     query.userId = this.userId;
   }
+
+  query.traded = false;
+
+  return Books.find(query);
+});
+
+Meteor.publish('booksTraded', function books(title) {
+  check(title, String);
+
+  if (!this.userId) {
+    return this.ready();
+  }
+
+  const query = {};
+
+  if (title) {
+    query.title = { $regex: title, $options: 'i' };
+  }
+
+  if (this.userId) {
+    query.userId = this.userId;
+  }
+
+  query.traded = true;
 
   return Books.find(query);
 });

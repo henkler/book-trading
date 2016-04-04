@@ -6,6 +6,7 @@ import Index from '/imports/ui/components/index';
 import BookEdit from '/imports/ui/containers/bookEdit';
 import BooksAvaiable from '/imports/ui/components/booksAvailable';
 import BooksOwned from '/imports/ui/components/booksOwned';
+import BooksTraded from '/imports/ui/components/booksTraded';
 import BooksAddSearch from '/imports/ui/components/booksAddSearch';
 import UserProfile from '/imports/ui/containers/userProfile';
 
@@ -15,7 +16,8 @@ export const Routes = () => (
       <IndexRoute component={ Index } />
       <Route path="/books" component={ BooksAvaiable } />
       <Route path="/mybooks" component={ BooksOwned } />
-      <Route path="/books/add" component={ BooksAddSearch } />
+      <Route path="/addbooks" component={ BooksAddSearch } />
+      <Route path="/tradedbooks" component={ BooksTraded } />
       <Route path="/books/:id" component={ BookEdit } />
       <Route path="/myprofile" components={ UserProfile } />
     </Route>

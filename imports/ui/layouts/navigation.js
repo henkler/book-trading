@@ -47,9 +47,14 @@ class Navigation extends React.Component {
             Available Books
           </MenuItem>
         </Link>
-        <Link to="/books/add" style={styles.link}>
+        <Link to="/addbooks" style={styles.link}>
           <MenuItem leftIcon={<LibraryAdd />} onTouchTap={ this.handleClose }>
             Add Books
+          </MenuItem>
+        </Link>
+        <Link to="/tradedbooks" style={styles.link}>
+          <MenuItem leftIcon={<LibraryAdd />} onTouchTap={ this.handleClose }>
+            Traded Books
           </MenuItem>
         </Link>
         <Link to="/myprofile" style={styles.link}>

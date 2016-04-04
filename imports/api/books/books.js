@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { insert } from '/imports/api/books/methods';
+import { trade } from '/imports/api/books/methods';
 
 export const Books = new Mongo.Collection('books');
 
@@ -49,8 +50,15 @@ Books.schema = new SimpleSchema({
   userId: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
+    denyUpdate: true,
     autoValue() {
-      return this.userId;
+      if (this.isInsert) {
+        return this.userId;
+      } else if (this.isUpsert) {
+        return { $setOnInsert: this.userId };
+      }
+
+      this.unset();  // Prevent user from supplying their own value
     }
   },
   traded: {
@@ -86,6 +94,11 @@ Books.helpers({
       description: this.description,
       publisher: this.publisher,
       pageCount: this.pageCount
+    });
+  },
+  requestTrade() {
+    trade.call({
+      bookId: this._id
     });
   }
 });

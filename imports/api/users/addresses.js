@@ -1,3 +1,5 @@
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+
 // https://schema.org/PostalAddress
 export const AddressSchema = new SimpleSchema({
   streetAddress: {
