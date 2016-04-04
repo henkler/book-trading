@@ -1,30 +1,8 @@
 import React from 'react';
-import SearchForm from './searchForm';
-import BookList from '../containers/bookAvailableList';
+import BookPage from './bookPage';
 
-class BooksAvailable extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      title: ''
-    };
-
-    this.doSearch = this.doSearch.bind(this);
-  }
-
-  doSearch(title) {
-    this.setState({ title });
-  }
-
-  render() {
-    return (
-      <div>
-        <SearchForm doSearch={this.doSearch}/>
-        <BookList title={this.state.title} />
-      </div>
-    );
-  }
-}
+const BooksAvailable = () => (
+  <BookPage publication={'booksAvailable'} />
+);
 
 export default BooksAvailable;
