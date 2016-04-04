@@ -53,6 +53,11 @@ Books.schema = new SimpleSchema({
       return this.userId;
     }
   },
+  traded: {
+    type: Boolean,
+    label: 'Has this book been traded',
+    defaultValue: false
+  },
   createdAt: {
     type: Date,
     label: 'The date this Book was created',
