@@ -116,7 +116,7 @@ export const trade = new ValidatedMethod({
         'Cannot trade a book that has already been traded');
     }
 
-    Trades.insert({ bookId });
+    Trades.insert({ bookId, bookOwnerUserId: book.userId });
     Books.update(bookId, { $set: { traded: true } });
   }
 });

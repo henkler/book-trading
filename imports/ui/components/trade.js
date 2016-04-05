@@ -24,54 +24,63 @@ const styles = {
   }
 };
 
-class Book extends React.Component {
+class Trade extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleAddClick = this.handleAddClick.bind(this);
-    this.handleTradeClick = this.handleTradeClick.bind(this);
-    this.handleEditClick = this.handleEditClick.bind(this);
-    this.handleDeleteClick = this.handleDeleteClick.bind(this);
+    this.handleAcceptClick = this.handleAcceptClick.bind(this);
+    this.handleRejectClick = this.handleRejectClick.bind(this);
+    this.handleShipClick = this.handleShipClick.bind(this);
+    this.handleReceiveClick = this.handleReceiveClick.bind(this);
+    this.handleCancelClick = this.handleCancelClick.bind(this);
   }
 
-  handleAddClick() {
-    this.props.book.addBookToCollection();
-    this.context.router.push('/mybooks');
+  handleAcceptClick() {
+    this.props.trade.accept();
   }
 
-  handleTradeClick() {
-    this.props.book.requestTrade();
+  handleRejectClick() {
+    this.props.trade.reject();
   }
 
-  handleEditClick() {
-    this.context.router.push(`/books/${this.props.book._id}`);
+  handleShipClick() {
+    this.props.trade.ship();
   }
 
-  handleDeleteClick() {
-    this.props.book.remove();
+  handleReceiveClick() {
+    this.props.trade.receive();
+  }
+
+  handleCancelClick() {
+    this.props.trade.cancel();
   }
 
   renderActions() {
-    const book = this.props.book;
+    const trade = this.props.trade;
     const actions = this.props.actions;
     const actionButtons = [];
 
-    if (book.editableByCurrentUser()) {
-      if (actions.includes('edit')) {
-        actionButtons.push(<FlatButton key="action_edit" label="Edit" onClick={ this.handleEditClick } />);
+    if (trade.isBookOwner()) {
+      if (actions.includes('accept') && trade.canAccept()) {
+        actionButtons.push(<FlatButton key="action_accept" label="Accept Trade" onClick={ this.handleAcceptClick } />);
       }
 
-      if (actions.includes('delete')) {
-        actionButtons.push(<FlatButton key="action_delete" label="Delete" onClick={ this.handleDeleteClick } />);
+      if (actions.includes('reject') && trade.canReject()) {
+        actionButtons.push(<FlatButton key="action_reject" label="Reject Trade" onClick={ this.handleRejectClick } />);
+      }
+
+      if (actions.includes('ship') && trade.canShip()) {
+        actionButtons.push(<FlatButton key="action_ship" label="Mark as Shipped" onClick={ this.handleShipClick } />);
       }
     }
 
-    if (actions.includes('add')) {
-      actionButtons.push(<FlatButton key="action_add" label="Add to My Books" onClick={ this.handleAddClick } />);
-    }
-
-    if (actions.includes('trade')) {
-      actionButtons.push(<FlatButton key="action_trade" label="Request Trade" onClick={ this.handleTradeClick } />);
+    if (trade.isTradeCreator()) {
+      if (actions.includes('cancel') && trade.canCancel()) {
+        actionButtons.push(<FlatButton key="action_cancel" label="Cancel Trade" onClick={ this.handleCancelClick }/>);
+      }
+      if (actions.includes('receive') && trade.canReceive()) {
+        actionButtons.push(<FlatButton key="action_receive" label="Mark as Received" onClick={ this.handleReceiveClick }/>);
+      }
     }
 
     if (actionButtons.length > 0) {
@@ -108,17 +117,18 @@ class Book extends React.Component {
   }
 }
 
-Book.propTypes = {
+Trade.propTypes = {
   book: React.PropTypes.object.isRequired,
+  trade: React.PropTypes.object.isRequired,
   actions: React.PropTypes.array
 };
 
-Book.defaultProps = {
+Trade.defaultProps = {
   actions: []
 };
 
-Book.contextTypes = {
+Trade.contextTypes = {
   router: React.PropTypes.object.isRequired
 };
 
-export default Book;
+export default Trade;

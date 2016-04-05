@@ -24,3 +24,4 @@ blaze-html-templates
 mdg:validated-method
 dburles:collection-helpers
 less
+reywood:publish-composite
