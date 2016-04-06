@@ -8,10 +8,14 @@ const styles = {
   }
 };
 
-const TradePoints = (props) => {
+const TradePoints = (props, context) => {
   if (props.user && props.user.tradePoints) {
     return (
-      <FlatButton label="Trade Points" labelStyle={styles.buttonLabel}>
+      <FlatButton
+        label="Trade Points"
+        labelStyle={styles.buttonLabel}
+        onClick={() => context.router.push('/')}
+      >
         <Avatar>
           {props.user.tradePoints}
         </Avatar>
@@ -23,6 +27,10 @@ const TradePoints = (props) => {
 
 TradePoints.propTypes = {
   user: React.PropTypes.object
+};
+
+TradePoints.contextTypes = {
+  router: React.PropTypes.object.isRequired
 };
 
 export default TradePoints;

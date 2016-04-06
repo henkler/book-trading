@@ -8,15 +8,27 @@ import TradeList from '../components/tradeList';
 const composer = (props, onData) => {
   if (Meteor.subscribe(props.publication).ready()) {
     let trades = [];
+    let tradeHandle = null;
+    let tradeCount = 0;
+
     if (props.filter === 'requested') {
-      trades = Trades.find({ userId: Meteor.userId() }).fetch();
+      tradeHandle = Trades.find({ userId: Meteor.userId() });
+      tradeCount = tradeHandle.count();
+      trades = tradeHandle.fetch();
     } else if (props.filter === 'owned') {
-      trades = Trades.find({ bookOwnerUserId: Meteor.userId() }).fetch();
+      tradeHandle = Trades.find({ bookOwnerUserId: Meteor.userId() });
+      tradeCount = tradeHandle.count();
+      trades = tradeHandle.fetch();
     } else {
-      trades = Trades.find().fetch();
+      tradeHandle = Trades.find();
+      tradeCount = tradeHandle.count();
+      trades = tradeHandle.fetch();
     }
-    trades.forEach(trade => { trade.book = Books.findOne(trade.bookId) });
-    onData(null, { trades });
+    trades.forEach(trade => {
+      trade.book = Books.findOne(trade.bookId);
+      trade.user = Meteor.users.findOne(trade.userId);
+    });
+    onData(null, { trades, tradeCount });
   }
 };
 

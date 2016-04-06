@@ -1,5 +1,4 @@
 import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check';
 import { Trades, TradeStatusTypes } from '../trades';
 import { Books } from '../../books/books';
 
@@ -20,6 +19,16 @@ Meteor.publishComposite('myTrades', {
     {
       find(trade) {
         return Books.find({ _id: trade.bookId }, { limit: 1 });
+      }
+    },
+    {
+      find(trade) {
+        return Meteor.users.find({ _id: trade.userId }, {
+          fields: {
+            fullName: 1,
+            shippingAddress: 1
+          }
+        });
       }
     }
   ]

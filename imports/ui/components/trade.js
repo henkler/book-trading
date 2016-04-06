@@ -100,7 +100,7 @@ class Trade extends React.Component {
       <Paper style={styles.paper} zDepth={4}>
         <Card>
           <CardHeader
-            title={TradeStatusTypes[this.props.trade.status].label}
+            title={<h2>{`Status: ${TradeStatusTypes[this.props.trade.status].label}`}</h2>}
           />
           <CardTitle
             title={this.props.book.title}
@@ -116,6 +116,17 @@ class Trade extends React.Component {
             <p><b>Publisher:</b> {this.props.book.publisher}</p>
             <p><b>Pages:</b> {this.props.book.pageCount}</p>
           </CardText>
+          <CardText>
+            <h2>Shipping Information</h2>
+            <p><b>Name:</b> {this.props.user.fullName}</p>
+            <p><b>Address</b></p>
+            <ul>
+              <li><b>Street:</b> {this.props.user.shippingAddress.streetAddress}</li>
+              <li><b>City:</b> {this.props.user.shippingAddress.city}</li>
+              <li><b>State:</b> {this.props.user.shippingAddress.state}</li>
+              <li><b>Zip:</b> {this.props.user.shippingAddress.zipCode}</li>
+            </ul>
+          </CardText>
           {this.renderActions()}
         </Card>
       </Paper>
@@ -125,7 +136,8 @@ class Trade extends React.Component {
 
 Trade.propTypes = {
   book: React.PropTypes.object.isRequired,
-  trade: React.PropTypes.object.isRequired
+  trade: React.PropTypes.object.isRequired,
+  user: React.PropTypes.object.isRequired
 };
 
 Trade.contextTypes = {

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Meteor } from 'meteor/meteor';
 import AppBar from 'material-ui/lib/app-bar';
 import Navigation from './navigation';
 

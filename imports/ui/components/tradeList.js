@@ -8,6 +8,7 @@ const TradeList = (props) => (
         key={trade._id}
         trade={trade}
         book={trade.book}
+        user={trade.user}
       />)}
   </div>
 );
