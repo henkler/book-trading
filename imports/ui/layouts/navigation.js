@@ -5,6 +5,10 @@ import LeftNav from 'material-ui/lib/left-nav';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import LibraryAdd from 'material-ui/lib/svg-icons/av/library-add';
 import LibraryBooks from 'material-ui/lib/svg-icons/av/library-books';
+import AccountBox from 'material-ui/lib/svg-icons/action/account-box';
+import NavigationApps from 'material-ui/lib/svg-icons/navigation/apps';
+import ActionHome from 'material-ui/lib/svg-icons/action/home';
+import AVRepeat from 'material-ui/lib/svg-icons/av/repeat';
 
 import AccountsUIWrapper from '../components/accountsUIWrapper';
 
@@ -36,6 +40,14 @@ class Navigation extends React.Component {
     const menuItems = [];
 
     menuItems.push(
+      <Link key="item_home" to="/" style={styles.link}>
+        <MenuItem leftIcon={<ActionHome />} onTouchTap={ this.handleClose }>
+          Home
+        </MenuItem>
+      </Link>
+    );
+
+    menuItems.push(
       <Link key="item_books" to="/books" style={styles.link}>
         <MenuItem leftIcon={<LibraryBooks />} onTouchTap={ this.handleClose }>
           All Books
@@ -46,21 +58,21 @@ class Navigation extends React.Component {
     if (Meteor.userId()) {
       menuItems.push(
         <Link key="item_mybooks" to="/mybooks" style={styles.link}>
-          <MenuItem leftIcon={<LibraryBooks />} onTouchTap={ this.handleClose }>
+          <MenuItem leftIcon={<LibraryAdd />} onTouchTap={ this.handleClose }>
             My Books
           </MenuItem>
         </Link>
       );
       menuItems.push(
         <Link key="item_mytrades" to="/mytrades" style={styles.link}>
-          <MenuItem leftIcon={<LibraryAdd />} onTouchTap={ this.handleClose }>
+          <MenuItem leftIcon={<AVRepeat />} onTouchTap={ this.handleClose }>
             My Trades
           </MenuItem>
         </Link>
       );
       menuItems.push(
         <Link key="item_myprofile" to="/myprofile" style={styles.link}>
-          <MenuItem leftIcon={<LibraryAdd />} onTouchTap={ this.handleClose }>
+          <MenuItem leftIcon={<NavigationApps />} onTouchTap={ this.handleClose }>
             My Profile
           </MenuItem>
         </Link>
