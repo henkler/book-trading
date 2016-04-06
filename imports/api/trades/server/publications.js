@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
-import { Trades } from '../trades';
+import { Trades, TradeStatusTypes } from '../trades';
 import { Books } from '../../books/books';
 
 Meteor.publishComposite('myTrades', {
@@ -9,9 +9,10 @@ Meteor.publishComposite('myTrades', {
       return this.ready();
     }
 
-    const query = {};
-    query.userId = this.userId;
-    query.status = { $ne: 'archived' };
+    const query = {
+      $or: [{ userId: this.userId }, { bookOwnerUserId: this.userId }],
+      status: { $ne: TradeStatusTypes.archived.value }
+    };
 
     return Trades.find(query);
   },

@@ -7,6 +7,8 @@ import CardTitle from 'material-ui/lib/card/card-title';
 import FlatButton from 'material-ui/lib/flat-button';
 import CardText from 'material-ui/lib/card/card-text';
 
+import { TradeStatusTypes } from '/imports/api/trades/trades';
+
 const styles = {
   paper: {
     width: 350,
@@ -63,7 +65,6 @@ class Trade extends React.Component {
 
   renderActions() {
     const trade = this.props.trade;
-    const actions = this.props.actions;
     const actionButtons = [];
 
     if (trade.canCancel()) {
@@ -99,8 +100,7 @@ class Trade extends React.Component {
       <Paper style={styles.paper} zDepth={4}>
         <Card>
           <CardHeader
-            title={this.props.trade.status}
-            subtitle={"Whatever"}
+            title={TradeStatusTypes[this.props.trade.status].label}
           />
           <CardTitle
             title={this.props.book.title}

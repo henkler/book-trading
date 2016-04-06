@@ -18,6 +18,16 @@ Trades.deny({
   remove() { return true; }
 });
 
+export const TradeStatusTypes = {
+  pending: { value: 'pending', label: 'Pending' },
+  cancelled: { value: 'cancelled', label: 'Cancelled' },
+  accepted: { value: 'accepted', label: 'Accepted' },
+  rejected: { value: 'rejected', label: 'Rejected' },
+  shipped: { value: 'shipped', label: 'Shipped' },
+  received: { value: 'received', label: 'Received' },
+  archived: { value: 'archived', label: 'Archived' }
+};
+
 Trades.schema = new SimpleSchema({
   bookId: {
     type: SimpleSchema.RegEx.Id,
@@ -32,22 +42,20 @@ Trades.schema = new SimpleSchema({
     label: 'ID of user initiating trade',
     regEx: SimpleSchema.RegEx.Id,
     autoValue() {
-      return this.userId;
+      if (this.isInsert) {
+        return this.userId;
+      } else if (this.isUpsert) {
+        return { $setOnInsert: this.userId };
+      }
+
+      this.unset();  // Prevent user from supplying their own value
     }
   },
   status: {
     type: String,
     label: 'Current status of the trade',
-    allowedValues: [
-      'pending',
-      'cancelled',
-      'accepted',
-      'rejected',
-      'shipped',
-      'received',
-      'archived'
-    ],
-    defaultValue: 'pending'
+    allowedValues: Object.keys(TradeStatusTypes),
+    defaultValue: TradeStatusTypes.pending.value
   },
   createdAt: {
     type: Date,
@@ -76,37 +84,38 @@ Trades.helpers({
     cancel.call({ tradeId: this._id });
   },
   canCancel() {
-    return (this.status === 'pending' && this.isTradeCreator());
+    return (this.status === TradeStatusTypes.pending.value && this.isTradeCreator());
   },
   accept() {
     accept.call({ tradeId: this._id });
   },
   canAccept() {
-    return (this.status === 'pending' && this.isBookOwner());
+    return (this.status === TradeStatusTypes.pending.value && this.isBookOwner());
   },
   reject() {
     reject.call({ tradeId: this._id });
   },
   canReject() {
-    return (this.status === 'pending' && this.isBookOwner());
+    return (this.status === TradeStatusTypes.pending.value && this.isBookOwner());
   },
   ship() {
     ship.call({ tradeId: this._id });
   },
   canShip() {
-    return (this.status === 'accepted' && this.isBookOwner());
+    return (this.status === TradeStatusTypes.accepted.value && this.isBookOwner());
   },
   receive() {
     receive.call({ tradeId: this._id });
   },
   canReceive() {
-    return (this.status === 'shipped' && this.isTradeCreator());
+    return (this.status === TradeStatusTypes.shipped.value && this.isTradeCreator());
   },
   archive() {
     archive.call({ tradeId: this._id });
   },
   canArchive() {
-    return (['rejected', 'cancelled', 'received'].indexOf(this.status) >= 0 && this.isTradeCreator());
+    const statusArr = [TradeStatusTypes.rejected.value, TradeStatusTypes.cancelled.value, TradeStatusTypes.received.value];
+    return (statusArr.indexOf(this.status) >= 0 && this.isTradeCreator());
   }
 });
 
