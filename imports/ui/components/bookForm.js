@@ -1,5 +1,6 @@
 import React from 'react';
 import Paper from 'material-ui/lib/paper';
+import RaisedButton from 'material-ui/lib/raised-button';
 import TextField from 'material-ui/lib/text-field';
 
 import { insert } from '/imports/api/books/methods';
@@ -17,13 +18,10 @@ class BookForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSave = this.handleSave.bind(this);
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
-
-    const bookId = this.props.book._id;
+  getFormData() {
     const title = this.refs.titleInput.getValue().trim();
     const author = this.refs.authorInput.getValue().trim();
     const thumbnail = this.refs.thumbnailInput.getValue().trim();
@@ -31,7 +29,7 @@ class BookForm extends React.Component {
     const publisher = this.refs.publisherInput.getValue().trim();
     const pageCount = parseInt(this.refs.pageCountInput.getValue().trim());
 
-    const bookFields = {
+    return {
       title,
       author,
       thumbnail,
@@ -39,13 +37,18 @@ class BookForm extends React.Component {
       publisher,
       pageCount
     };
+  }
+
+  handleSave() {
+    const bookId = this.props.book._id;
+    const book = this.getFormData();
 
     // if we have a bookId, do an update rather than insert
     if (bookId) {
-      bookFields.bookId = bookId;
-      update.call(bookFields);
+      book.bookId = bookId;
+      update.call(book);
     } else {
-      insert.call(bookFields);
+      insert.call(book);
     }
 
     this.context.router.goBack();
@@ -54,52 +57,50 @@ class BookForm extends React.Component {
   render() {
     return (
       <Paper style={styles.paper} zDepth={4}>
-        <form onSubmit={ this.handleSubmit }>
-          <label>Title: </label>
-          <TextField
-            ref="titleInput"
-            hintText="Book Title"
-            defaultValue={ this.props.book.title }
-          />
-          <br />
-          <label>Author: </label>
-          <TextField
-            ref="authorInput"
-            hintText="Book Author"
-            defaultValue={ this.props.book.author }
-          />
-          <br />
-          <label>Thumbnail: </label>
-          <TextField
-            ref="thumbnailInput"
-            hintText="Book Thumbnail URL"
-            defaultValue={ this.props.book.thumbnail }
-          />
-          <br />
-          <label>Description: </label>
-          <TextField
-            ref="descriptionInput"
-            hintText="Book Description"
-            defaultValue={ this.props.book.description }
-            multiLine={true}
-          />
-          <br />
-          <label>Publisher: </label>
-          <TextField
-            ref="publisherInput"
-            hintText="Book Publisher"
-            defaultValue={ this.props.book.publisher }
-          />
-          <br />
-          <label>Page Count: </label>
-          <TextField
-            ref="pageCountInput"
-            hintText="Page Count"
-            defaultValue={ this.props.book.pageCount }
-          />
-          <br />
-          <input type="submit" />
-        </form>
+        <label>Title: </label>
+        <TextField
+          ref="titleInput"
+          hintText="Book Title"
+          defaultValue={ this.props.book.title }
+        />
+        <br />
+        <label>Author: </label>
+        <TextField
+          ref="authorInput"
+          hintText="Book Author"
+          defaultValue={ this.props.book.author }
+        />
+        <br />
+        <label>Thumbnail: </label>
+        <TextField
+          ref="thumbnailInput"
+          hintText="Book Thumbnail URL"
+          defaultValue={ this.props.book.thumbnail }
+        />
+        <br />
+        <label>Description: </label>
+        <TextField
+          ref="descriptionInput"
+          hintText="Book Description"
+          defaultValue={ this.props.book.description }
+          multiLine={true}
+        />
+        <br />
+        <label>Publisher: </label>
+        <TextField
+          ref="publisherInput"
+          hintText="Book Publisher"
+          defaultValue={ this.props.book.publisher }
+        />
+        <br />
+        <label>Page Count: </label>
+        <TextField
+          ref="pageCountInput"
+          hintText="Page Count"
+          defaultValue={ this.props.book.pageCount }
+        />
+        <br />
+        <RaisedButton label="Save" primary={true} onClick={this.handleSave} />
       </Paper>
     );
   }

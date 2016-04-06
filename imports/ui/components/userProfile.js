@@ -1,6 +1,7 @@
 import React from 'react';
 import Paper from 'material-ui/lib/paper';
-import FlatButton from 'material-ui/lib/flat-button';
+import RaisedButton from 'material-ui/lib/raised-button';
+import TextField from 'material-ui/lib/text-field';
 
 import { updateProfile } from '/imports/api/users/methods';
 
@@ -17,16 +18,16 @@ class UserProfile extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handelSave = this.handelSave.bind(this);
+    this.handleSave = this.handleSave.bind(this);
   }
 
   getFormData() {
-    const fullName = this.refs.fullName.value;
+    const fullName = this.refs.fullName.getValue().trim();
     const shippingAddress = {
-      streetAddress: this.refs.streetAddress.value,
-      city: this.refs.city.value,
-      state: this.refs.state.value,
-      zipCode: this.refs.zipCode.value
+      streetAddress: this.refs.streetAddress.getValue().trim(),
+      city: this.refs.city.getValue().trim(),
+      state: this.refs.state.getValue().trim(),
+      zipCode: this.refs.zipCode.getValue().trim()
     };
 
     return {
@@ -35,31 +36,56 @@ class UserProfile extends React.Component {
     };
   }
 
-  handelSave() {
+  handleSave() {
     updateProfile.call(this.getFormData());
+    this.context.router.goBack();
   }
 
   render() {
     return (
       <Paper style={styles.paper} zDepth={4}>
-        <label htmlFor="fullName">Full Name: </label>
-        <input type="text" id="fullName" ref="fullName" defaultValue={this.props.user.fullName} />
-        <br />
+        <h2>User Information</h2>
+        <TextField
+          id="fullName"
+          ref="fullName"
+          hintText="Full Name"
+          defaultValue={this.props.user.fullName}
+        />
         <br />
         <h2>Shipping Address</h2>
-        <label htmlFor="streetAddress">Street Address: </label>
-        <input type="text" id="streetAddress" ref="streetAddress" defaultValue={this.props.user.shippingAddress.streetAddress} />
+        <b><label htmlFor="streetAddress">Street</label></b><br />
+        <TextField
+          id="streetAddress"
+          ref="streetAddress"
+          hintText="Street Address"
+          defaultValue={this.props.user.shippingAddress.streetAddress}
+        />
         <br />
-        <label htmlFor="city">City: </label>
-        <input type="text" id="city" ref="city" defaultValue={this.props.user.shippingAddress.city} />
+        <b><label htmlFor="city">City</label></b><br />
+        <TextField
+          id="city"
+          ref="city"
+          hintText="City"
+          defaultValue={this.props.user.shippingAddress.city}
+        />
         <br />
-        <label htmlFor="state">State: </label>
-        <input type="text" id="state" ref="state" defaultValue={this.props.user.shippingAddress.state} />
+        <b><label htmlFor="state">State</label></b><br />
+        <TextField
+          id="state"
+          ref="state"
+          hintText="State "
+          defaultValue={this.props.user.shippingAddress.state}
+        />
         <br />
-        <label htmlFor="zipCode">ZIP Code: </label>
-        <input type="text" id="zipCode" ref="zipCode" defaultValue={this.props.user.shippingAddress.zipCode} />
+        <b><label htmlFor="zipCode">ZIP Code: </label></b><br />
+        <TextField
+          id="zipCode"
+          ref="zipCode"
+          hintText="Zip Code"
+          defaultValue={this.props.user.shippingAddress.zipCode}
+        />
         <br />
-        <FlatButton label="Save" onClick={this.handelSave} />
+        <RaisedButton label="Save" primary={true} onClick={this.handleSave} />
       </Paper>
     );
   }
@@ -67,6 +93,10 @@ class UserProfile extends React.Component {
 
 UserProfile.propTypes = {
   user: React.PropTypes.object.isRequired
+};
+
+UserProfile.contextTypes = {
+  router: React.PropTypes.object.isRequired
 };
 
 export default UserProfile;
