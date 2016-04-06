@@ -21,7 +21,7 @@ export function bookSearchByTitle(titleSearch) {
     resultsList = results.items.map(item => {
       const volume = item.volumeInfo;
       const title = volume.title;
-      const author = volume.authors[0];
+      const author = (volume.authors && volume.authors[0]) ? volume.authors[0] : '';
       const description = volume.description;
       const publisher = volume.publisher;
       const pageCount = volume.pageCount;
