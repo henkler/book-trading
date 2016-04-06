@@ -8,18 +8,12 @@ const TradeList = (props) => (
         key={trade._id}
         trade={trade}
         book={trade.book}
-        actions={props.actions}
       />)}
   </div>
 );
 
 TradeList.propTypes = {
-  trades: React.PropTypes.array.isRequired,
-  actions: React.PropTypes.array
-};
-
-TradeList.defaultProps = {
-  actions: []
+  trades: React.PropTypes.array.isRequired
 };
 
 export default TradeList;

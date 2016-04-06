@@ -5,7 +5,7 @@ import { Books } from '/imports/api/books/books';
 import BookForm from '../components/bookForm';
 
 const composer = (props, onData) => {
-  if (Meteor.subscribe('books').ready()) {
+  if (Meteor.subscribe('books', props.params.id).ready()) {
     const book = Books.findOne(props.params.id);
     onData(null, { book });
   }

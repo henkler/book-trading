@@ -125,12 +125,7 @@ class Trade extends React.Component {
 
 Trade.propTypes = {
   book: React.PropTypes.object.isRequired,
-  trade: React.PropTypes.object.isRequired,
-  actions: React.PropTypes.array
-};
-
-Trade.defaultProps = {
-  actions: []
+  trade: React.PropTypes.object.isRequired
 };
 
 Trade.contextTypes = {

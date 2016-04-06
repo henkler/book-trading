@@ -4,6 +4,12 @@ import { check } from 'meteor/check';
 import { Books } from '../books';
 import { bookSearchByTitle } from './bookSearch';
 
+Meteor.publish('books', function books(bookId) {
+  check(bookId, String);
+
+  return Books.find(bookId);
+});
+
 Meteor.publish('booksAvailable', function books(title) {
   check(title, String);
   const query = {};
