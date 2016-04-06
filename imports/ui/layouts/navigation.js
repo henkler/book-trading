@@ -37,24 +37,14 @@ class Navigation extends React.Component {
         open={this.state.open}
         onRequestChange={open => this.setState({ open })}
       >
+        <Link to="/books" style={styles.link}>
+          <MenuItem leftIcon={<LibraryBooks />} onTouchTap={ this.handleClose }>
+            All Books
+          </MenuItem>
+        </Link>
         <Link to="/mybooks" style={styles.link}>
           <MenuItem leftIcon={<LibraryBooks />} onTouchTap={ this.handleClose }>
             My Books
-          </MenuItem>
-        </Link>
-        <Link to="/books" style={styles.link}>
-          <MenuItem leftIcon={<LibraryAdd />} onTouchTap={ this.handleClose }>
-            Available Books
-          </MenuItem>
-        </Link>
-        <Link to="/addbooks" style={styles.link}>
-          <MenuItem leftIcon={<LibraryAdd />} onTouchTap={ this.handleClose }>
-            Add Books
-          </MenuItem>
-        </Link>
-        <Link to="/tradedbooks" style={styles.link}>
-          <MenuItem leftIcon={<LibraryAdd />} onTouchTap={ this.handleClose }>
-            Traded Books
           </MenuItem>
         </Link>
         <Link to="/mytrades" style={styles.link}>

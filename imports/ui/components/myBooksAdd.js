@@ -2,7 +2,7 @@ import React from 'react';
 import SearchForm from './searchForm';
 import BooksList from '../containers/bookList';
 
-class BookPage extends React.Component {
+class MyBooksAdd extends React.Component {
   constructor(props) {
     super(props);
 
@@ -22,22 +22,13 @@ class BookPage extends React.Component {
       <div>
         <SearchForm doSearch={this.doSearch} />
         <BooksList
-          publication={this.props.publication}
+          publication={'booksAddSearch'}
           title={this.state.title}
-          actions={this.props.actions}
+          actions={['add']}
         />
       </div>
     );
   }
 }
 
-BookPage.propTypes = {
-  publication: React.PropTypes.string.isRequired,
-  actions: React.PropTypes.array
-};
-
-BookPage.defaultProps = {
-  actions: []
-};
-
-export default BookPage;
+export default MyBooksAdd;

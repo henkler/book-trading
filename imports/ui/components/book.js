@@ -35,12 +35,12 @@ class Book extends React.Component {
   }
 
   handleAddClick() {
-    this.props.book.addBookToCollection();
+    this.props.book.insert();
     this.context.router.push('/mybooks');
   }
 
   handleTradeClick() {
-    this.props.book.requestTrade();
+    this.props.book.trade();
     this.context.router.push('/mytrades');
   }
 

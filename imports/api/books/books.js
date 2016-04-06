@@ -91,7 +91,7 @@ Books.helpers({
   editableByCurrentUser() {
     return this.userId === Meteor.userId();
   },
-  addBookToCollection() {
+  insert() {
     insert.call({
       title: this.title,
       author: this.author,
@@ -104,7 +104,7 @@ Books.helpers({
   remove() {
     remove.call({ bookId: this._id });
   },
-  requestTrade() {
+  trade() {
     trade.call({
       bookId: this._id
     });
@@ -112,3 +112,17 @@ Books.helpers({
 });
 
 Books.attachSchema(Books.schema);
+
+export function myBooks() {
+  const query = {};
+  query.traded = false;
+
+  return Books.find(query).fetch();
+}
+
+export function tradedBooks() {
+  const query = {};
+  query.traded = true;
+
+  return Books.find(query).fetch();
+}

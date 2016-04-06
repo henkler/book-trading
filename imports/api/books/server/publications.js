@@ -10,7 +10,7 @@ Meteor.publish('books', function books(bookId) {
   return Books.find(bookId);
 });
 
-Meteor.publish('booksAvailable', function books(title) {
+Meteor.publish('allBooks', function books(title = '') {
   check(title, String);
   const query = {};
 
@@ -27,15 +27,13 @@ Meteor.publish('booksAvailable', function books(title) {
   return Books.find(query);
 });
 
-Meteor.publish('booksOwned', function books(title) {
+Meteor.publish('myBooks', function books(title = '') {
   check(title, String);
-
   if (!this.userId) {
     return this.ready();
   }
 
   const query = {};
-
   if (title) {
     query.title = { $regex: title, $options: 'i' };
   }
@@ -43,36 +41,12 @@ Meteor.publish('booksOwned', function books(title) {
   if (this.userId) {
     query.userId = this.userId;
   }
-
-  query.traded = false;
-
-  return Books.find(query);
-});
-
-Meteor.publish('booksTraded', function books(title) {
-  check(title, String);
-
-  if (!this.userId) {
-    return this.ready();
-  }
-
-  const query = {};
-
-  if (title) {
-    query.title = { $regex: title, $options: 'i' };
-  }
-
-  if (this.userId) {
-    query.userId = this.userId;
-  }
-
-  query.traded = true;
 
   return Books.find(query);
 });
 
 // Synthetic collection - returns "Book-Like" objects from book database
-Meteor.publish('booksAddSearch', function books(title) {
+Meteor.publish('booksAddSearch', function books(title = '') {
   check(title, String);
   if (title) {
     const results = bookSearchByTitle(title);
