@@ -18,7 +18,7 @@ export const insert = new ValidatedMethod({
   run({ title, author, thumbnail, description, publisher, pageCount }) {
     if (!this.userId) {
       throw new Meteor.Error('books.insert.accessDenied',
-        'Must be logged in to add a book');
+        'Not authenticated');
     }
 
     const bookFields = {
@@ -46,15 +46,20 @@ export const update = new ValidatedMethod({
     pageCount: { type: Number }
   }).validator(),
   run({ bookId, title, author, thumbnail, description, publisher, pageCount }) {
+    if (!this.userId) {
+      throw new Meteor.Error('books.update.accessDenied',
+        'Not authenticated');
+    }
+
     const book = Books.findOne(bookId);
 
     if (!book) {
-      throw new Meteor.Error('books.remove.accessDenied',
+      throw new Meteor.Error('books.update.accessDenied',
         'Unable to find book');
     }
 
     if (!book.editableByCurrentUser()) {
-      throw new Meteor.Error('books.remove.accessDenied',
+      throw new Meteor.Error('books.update.accessDenied',
         'Cannot remove a book you do not own');
     }
 
@@ -77,6 +82,11 @@ export const remove = new ValidatedMethod({
     bookId: { type: String }
   }).validator(),
   run({ bookId }) {
+    if (!this.userId) {
+      throw new Meteor.Error('books.remove.accessDenied',
+        'Not authenticated');
+    }
+
     const book = Books.findOne(bookId);
 
     if (!book) {
@@ -99,11 +109,28 @@ export const trade = new ValidatedMethod({
     bookId: { type: String }
   }).validator(),
   run({ bookId }) {
-    const book = Books.findOne(bookId);
+    if (!this.userId) {
+      throw new Meteor.Error('books.trade.accessDenied',
+        'Not authenticated');
+    }
 
+    const book = Books.findOne(bookId);
     if (!book) {
       throw new Meteor.Error('books.trade.accessDenied',
         'Unable to find book');
+    }
+
+    // make sure this only runs on the server as tradePoints is not published to clients automatically
+    if (!this.isSimulation) {
+      const user = Meteor.users.find(this.userId);
+      if (!user) {
+        throw new Meteor.Error('books.trade.accessDenied',
+          'Unable to retrieve User object');
+      }
+      if (user.tradePoints <= 0) {
+        throw new Meteor.Error('books.trade.accessDenied',
+          'Insufficient Trade Points Available');
+      }
     }
 
     if (book.editableByCurrentUser()) {
@@ -118,5 +145,8 @@ export const trade = new ValidatedMethod({
 
     const tradeId = Trades.insert({ bookId, bookOwnerUserId: book.userId });
     Books.update(bookId, { $set: { traded: true, tradeId } });
+
+    // Decrement the available trade points
+    Meteor.users.update(this.userId, { $inc: { tradePoints: -1 } });
   }
 });

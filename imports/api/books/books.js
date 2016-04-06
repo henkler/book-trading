@@ -2,9 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-import { insert } from '/imports/api/books/methods';
-import { remove } from '/imports/api/books/methods';
-import { trade } from '/imports/api/books/methods';
+import { insert, remove, trade } from './methods';
 
 export const Books = new Mongo.Collection('books');
 
@@ -91,6 +89,9 @@ Books.helpers({
   editableByCurrentUser() {
     return this.userId === Meteor.userId();
   },
+  canEdit() {
+    return this.editableByCurrentUser();
+  },
   insert() {
     insert.call({
       title: this.title,
@@ -101,13 +102,28 @@ Books.helpers({
       pageCount: this.pageCount
     });
   },
+  canInsert() {
+    if (Meteor.userId()) {
+      return true;
+    }
+
+    return false;
+  },
   remove() {
     remove.call({ bookId: this._id });
   },
+  canRemove() {
+    return this.editableByCurrentUser();
+  },
   trade() {
-    trade.call({
-      bookId: this._id
-    });
+    trade.call({ bookId: this._id });
+  },
+  canTrade() {
+    if (Meteor.userId()) {
+      return true;
+    }
+
+    return false;
   }
 });
 

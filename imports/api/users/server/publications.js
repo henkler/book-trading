@@ -18,3 +18,17 @@ Meteor.publish('user.profile', function userProfile() {
 
   return Users.find(selector, options);
 });
+
+Meteor.publish('user.tradePoints', function userTradePoints() {
+  if (!this.userId) {
+    return this.ready();
+  }
+
+  const selector = { _id: this.userId };
+
+  const options = {
+    fields: { tradePoints: 1 }
+  };
+
+  return Users.find(selector, options);
+});

@@ -45,7 +45,7 @@ class Book extends React.Component {
   }
 
   handleEditClick() {
-    this.context.router.push(`/books/${this.props.book._id}`);
+    this.context.router.push(`/mybooks/${this.props.book._id}`);
   }
 
   handleDeleteClick() {
@@ -57,21 +57,19 @@ class Book extends React.Component {
     const actions = this.props.actions;
     const actionButtons = [];
 
-    if (book.editableByCurrentUser()) {
-      if (actions.includes('edit')) {
-        actionButtons.push(<FlatButton key="action_edit" label="Edit" onClick={ this.handleEditClick } />);
-      }
-
-      if (actions.includes('delete')) {
-        actionButtons.push(<FlatButton key="action_delete" label="Delete" onClick={ this.handleDeleteClick } />);
-      }
+    if (actions.includes('edit') && book.canEdit()) {
+      actionButtons.push(<FlatButton key="action_edit" label="Edit" onClick={ this.handleEditClick } />);
     }
 
-    if (actions.includes('add')) {
+    if (actions.includes('delete') && book.canRemove()) {
+      actionButtons.push(<FlatButton key="action_delete" label="Delete" onClick={ this.handleDeleteClick } />);
+    }
+
+    if (actions.includes('add') && book.canInsert()) {
       actionButtons.push(<FlatButton key="action_add" label="Add to My Books" onClick={ this.handleAddClick } />);
     }
 
-    if (actions.includes('trade')) {
+    if (actions.includes('trade') && book.canTrade()) {
       actionButtons.push(<FlatButton key="action_trade" label="Request Trade" onClick={ this.handleTradeClick } />);
     }
 

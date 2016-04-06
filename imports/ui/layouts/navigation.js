@@ -1,9 +1,12 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
 import { Link } from 'react-router';
 import LeftNav from 'material-ui/lib/left-nav';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import LibraryAdd from 'material-ui/lib/svg-icons/av/library-add';
 import LibraryBooks from 'material-ui/lib/svg-icons/av/library-books';
+
+import AccountsUIWrapper from '../components/accountsUIWrapper';
 
 const styles = {
   link: {
@@ -29,34 +32,59 @@ class Navigation extends React.Component {
     this.setState({ open: false });
   }
 
-  render() {
-    return (
-      <LeftNav
-        docked={false}
-        width={200}
-        open={this.state.open}
-        onRequestChange={open => this.setState({ open })}
-      >
-        <Link to="/books" style={styles.link}>
-          <MenuItem leftIcon={<LibraryBooks />} onTouchTap={ this.handleClose }>
-            All Books
-          </MenuItem>
-        </Link>
-        <Link to="/mybooks" style={styles.link}>
+  renderMenuItems() {
+    const menuItems = [];
+
+    menuItems.push(
+      <Link key="item_books" to="/books" style={styles.link}>
+        <MenuItem leftIcon={<LibraryBooks />} onTouchTap={ this.handleClose }>
+          All Books
+        </MenuItem>
+      </Link>
+    );
+
+    if (Meteor.userId()) {
+      menuItems.push(
+        <Link key="item_mybooks" to="/mybooks" style={styles.link}>
           <MenuItem leftIcon={<LibraryBooks />} onTouchTap={ this.handleClose }>
             My Books
           </MenuItem>
         </Link>
-        <Link to="/mytrades" style={styles.link}>
+      );
+      menuItems.push(
+        <Link key="item_mytrades" to="/mytrades" style={styles.link}>
           <MenuItem leftIcon={<LibraryAdd />} onTouchTap={ this.handleClose }>
             My Trades
           </MenuItem>
         </Link>
-        <Link to="/myprofile" style={styles.link}>
+      );
+      menuItems.push(
+        <Link key="item_myprofile" to="/myprofile" style={styles.link}>
           <MenuItem leftIcon={<LibraryAdd />} onTouchTap={ this.handleClose }>
             My Profile
           </MenuItem>
         </Link>
+      );
+    }
+
+    menuItems.push(
+      <MenuItem key="item_login" insetChildren={true} onTouchTap={ this.handleClose }>
+        <AccountsUIWrapper />
+      </MenuItem>
+    );
+
+    return menuItems;
+  }
+
+  render() {
+    return (
+      <LeftNav
+        docked={false}
+        width={250}
+        open={this.state.open}
+        onRequestChange={open => this.setState({ open })}
+      >
+        {this.renderMenuItems()}
       </LeftNav>
     );
   }

@@ -11,6 +11,11 @@ export const cancel = new ValidatedMethod({
     tradeId: { type: String }
   }).validator(),
   run({ tradeId }) {
+    if (!this.userId) {
+      throw new Meteor.Error('traces.cancel.accessDenied',
+        'Not authenticated');
+    }
+
     const trade = Trades.findOne(tradeId);
 
     if (!trade) {
@@ -25,6 +30,9 @@ export const cancel = new ValidatedMethod({
 
     Trades.update(tradeId, { $set: { status: 'cancelled' } });
     Books.update(trade.bookId, { $set: { traded: false }, $unset: { tradeId: '' } });
+
+    // return available trade point to user
+    Meteor.users.update(trade.userId, { $inc: { tradePoints: 1 } });
   }
 });
 
@@ -34,6 +42,11 @@ export const accept = new ValidatedMethod({
     tradeId: { type: String }
   }).validator(),
   run({ tradeId }) {
+    if (!this.userId) {
+      throw new Meteor.Error('traces.accept.accessDenied',
+        'Not authenticated');
+    }
+
     const trade = Trades.findOne(tradeId);
 
     if (!trade) {
@@ -56,6 +69,11 @@ export const reject = new ValidatedMethod({
     tradeId: { type: String }
   }).validator(),
   run({ tradeId }) {
+    if (!this.userId) {
+      throw new Meteor.Error('traces.reject.accessDenied',
+        'Not authenticated');
+    }
+
     const trade = Trades.findOne(tradeId);
 
     if (!trade) {
@@ -70,6 +88,9 @@ export const reject = new ValidatedMethod({
 
     Trades.update(tradeId, { $set: { status: 'rejected' } });
     Books.update(trade.bookId, { $set: { traded: false }, $unset: { tradeId: '' } });
+
+    // return available trade point to user
+    Meteor.users.update(trade.userId, { $inc: { tradePoints: 1 } });
   }
 });
 
@@ -79,6 +100,11 @@ export const ship = new ValidatedMethod({
     tradeId: { type: String }
   }).validator(),
   run({ tradeId }) {
+    if (!this.userId) {
+      throw new Meteor.Error('traces.ship.accessDenied',
+        'Not authenticated');
+    }
+
     const trade = Trades.findOne(tradeId);
 
     if (!trade) {
@@ -101,6 +127,11 @@ export const receive = new ValidatedMethod({
     tradeId: { type: String }
   }).validator(),
   run({ tradeId }) {
+    if (!this.userId) {
+      throw new Meteor.Error('traces.receive.accessDenied',
+        'Not authenticated');
+    }
+
     const trade = Trades.findOne(tradeId);
 
     if (!trade) {
@@ -114,6 +145,9 @@ export const receive = new ValidatedMethod({
     }
 
     Trades.update(tradeId, { $set: { status: 'received' } });
+
+    // book owner gets another trade point
+    Meteor.users.update(trade.bookOwnerUserId, { $inc: { tradePoints: 1 } });
   }
 });
 
@@ -123,6 +157,11 @@ export const archive = new ValidatedMethod({
     tradeId: { type: String }
   }).validator(),
   run({ tradeId }) {
+    if (!this.userId) {
+      throw new Meteor.Error('traces.archive.accessDenied',
+        'Not authenticated');
+    }
+
     const trade = Trades.findOne(tradeId);
 
     if (!trade) {

@@ -1,7 +1,9 @@
 import React from 'react';
+import { Meteor } from 'meteor/meteor';
 import AppBar from 'material-ui/lib/app-bar';
-import AccountsUIWrapper from '../components/accountsUIWrapper';
 import Navigation from './navigation';
+
+import TradePoints from '../containers/tradePoints';
 
 class MainLayout extends React.Component {
   constructor(props) {
@@ -19,8 +21,8 @@ class MainLayout extends React.Component {
       <div>
         <AppBar
           title="Book Trading App"
-          iconElementRight={<AccountsUIWrapper />}
           onLeftIconButtonTouchTap={this.handleMenuClick}
+          iconElementRight={<TradePoints />}
         />
         <Navigation ref="navBar" />
         { this.props.children }
