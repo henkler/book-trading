@@ -57,7 +57,7 @@ class Navigation extends React.Component {
             Traded Books
           </MenuItem>
         </Link>
-        <Link to="/trades" style={styles.link}>
+        <Link to="/mytrades" style={styles.link}>
           <MenuItem leftIcon={<LibraryAdd />} onTouchTap={ this.handleClose }>
             My Trades
           </MenuItem>

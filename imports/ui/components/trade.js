@@ -1,6 +1,7 @@
 import React from 'react';
 import Paper from 'material-ui/lib/paper';
 import Card from 'material-ui/lib/card/card';
+import CardHeader from 'material-ui/lib/card/card-header';
 import CardActions from 'material-ui/lib/card/card-actions';
 import CardTitle from 'material-ui/lib/card/card-title';
 import FlatButton from 'material-ui/lib/flat-button';
@@ -33,6 +34,7 @@ class Trade extends React.Component {
     this.handleShipClick = this.handleShipClick.bind(this);
     this.handleReceiveClick = this.handleReceiveClick.bind(this);
     this.handleCancelClick = this.handleCancelClick.bind(this);
+    this.handleArchiveClick = this.handleArchiveClick.bind(this);
   }
 
   handleAcceptClick() {
@@ -55,32 +57,32 @@ class Trade extends React.Component {
     this.props.trade.cancel();
   }
 
+  handleArchiveClick() {
+    this.props.trade.archive();
+  }
+
   renderActions() {
     const trade = this.props.trade;
     const actions = this.props.actions;
     const actionButtons = [];
 
-    if (trade.isBookOwner()) {
-      if (actions.includes('accept') && trade.canAccept()) {
-        actionButtons.push(<FlatButton key="action_accept" label="Accept Trade" onClick={ this.handleAcceptClick } />);
-      }
-
-      if (actions.includes('reject') && trade.canReject()) {
-        actionButtons.push(<FlatButton key="action_reject" label="Reject Trade" onClick={ this.handleRejectClick } />);
-      }
-
-      if (actions.includes('ship') && trade.canShip()) {
-        actionButtons.push(<FlatButton key="action_ship" label="Mark as Shipped" onClick={ this.handleShipClick } />);
-      }
+    if (trade.canCancel()) {
+      actionButtons.push(<FlatButton key="action_cancel" label="Cancel Trade" onClick={ this.handleCancelClick }/>);
     }
-
-    if (trade.isTradeCreator()) {
-      if (actions.includes('cancel') && trade.canCancel()) {
-        actionButtons.push(<FlatButton key="action_cancel" label="Cancel Trade" onClick={ this.handleCancelClick }/>);
-      }
-      if (actions.includes('receive') && trade.canReceive()) {
-        actionButtons.push(<FlatButton key="action_receive" label="Mark as Received" onClick={ this.handleReceiveClick }/>);
-      }
+    if (trade.canAccept()) {
+      actionButtons.push(<FlatButton key="action_accept" label="Accept Trade" onClick={ this.handleAcceptClick } />);
+    }
+    if (trade.canReject()) {
+      actionButtons.push(<FlatButton key="action_reject" label="Reject Trade" onClick={ this.handleRejectClick } />);
+    }
+    if (trade.canShip()) {
+      actionButtons.push(<FlatButton key="action_ship" label="Mark as Shipped" onClick={ this.handleShipClick } />);
+    }
+    if (trade.canReceive()) {
+      actionButtons.push(<FlatButton key="action_receive" label="Mark as Received" onClick={ this.handleReceiveClick } />);
+    }
+    if (trade.canArchive()) {
+      actionButtons.push(<FlatButton key="action_archive" label="Archive Trade" onClick={ this.handleArchiveClick } />);
     }
 
     if (actionButtons.length > 0) {
@@ -96,6 +98,10 @@ class Trade extends React.Component {
     return (
       <Paper style={styles.paper} zDepth={4}>
         <Card>
+          <CardHeader
+            title={this.props.trade.status}
+            subtitle={"Whatever"}
+          />
           <CardTitle
             title={this.props.book.title}
             subtitle={this.props.book.author}

@@ -20,7 +20,7 @@ export const Routes = () => (
       <Route path="/addbooks" component={ BooksAddSearch } />
       <Route path="/tradedbooks" component={ BooksTraded } />
       <Route path="/books/:id" component={ BookEdit } />
-      <Route path="/trades" component={ TradePage } />
+      <Route path="/mytrades" component={ TradePage } />
       <Route path="/myprofile" components={ UserProfile } />
     </Route>
   </Router>

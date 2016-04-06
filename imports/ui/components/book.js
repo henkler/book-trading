@@ -41,6 +41,7 @@ class Book extends React.Component {
 
   handleTradeClick() {
     this.props.book.requestTrade();
+    this.context.router.push('/mytrades');
   }
 
   handleEditClick() {

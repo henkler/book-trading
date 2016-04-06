@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-import { cancel, accept, reject, receive, ship } from './methods';
+import { cancel, accept, reject, receive, ship, archive } from './methods';
 
 export const Trades = new Mongo.Collection('trades');
 
@@ -35,25 +35,19 @@ Trades.schema = new SimpleSchema({
       return this.userId;
     }
   },
-  accepted: {
-    type: Boolean,
-    label: 'Has the trade been accepted',
-    defaultValue: false
-  },
-  rejected: {
-    type: Boolean,
-    label: 'Has the trade been rejected',
-    defaultValue: false
-  },
-  shipped: {
-    type: Boolean,
-    label: 'Has the trade been shipped',
-    defaultValue: false
-  },
-  received: {
-    type: Boolean,
-    label: 'Has the trade been received',
-    defaultValue: false
+  status: {
+    type: String,
+    label: 'Current status of the trade',
+    allowedValues: [
+      'pending',
+      'cancelled',
+      'accepted',
+      'rejected',
+      'shipped',
+      'received',
+      'archived'
+    ],
+    defaultValue: 'pending'
   },
   createdAt: {
     type: Date,
@@ -72,9 +66,6 @@ Trades.schema = new SimpleSchema({
 });
 
 Trades.helpers({
-  book() {
-    return Books.findOne(this.bookId);
-  },
   isBookOwner() {
     return this.bookOwnerUserId === Meteor.userId();
   },
@@ -85,46 +76,37 @@ Trades.helpers({
     cancel.call({ tradeId: this._id });
   },
   canCancel() {
-    if (this.accepted || this.rejected || !this.isTradeCreator()) {
-      return false;
-    }
-    return true;
+    return (this.status === 'pending' && this.isTradeCreator());
   },
   accept() {
     accept.call({ tradeId: this._id });
   },
   canAccept() {
-    if (this.accepted || this.rejected || !this.isBookOwner()) {
-      return false;
-    }
-    return true;
+    return (this.status === 'pending' && this.isBookOwner());
   },
   reject() {
     reject.call({ tradeId: this._id });
   },
   canReject() {
-    if (this.rejected || this.shipped || !this.isBookOwner()) {
-      return false;
-    }
-    return true;
+    return (this.status === 'pending' && this.isBookOwner());
   },
   ship() {
     ship.call({ tradeId: this._id });
   },
   canShip() {
-    if (!this.accepted || !this.isBookOwner()) {
-      return false;
-    }
-    return true;
+    return (this.status === 'accepted' && this.isBookOwner());
   },
   receive() {
     receive.call({ tradeId: this._id });
   },
   canReceive() {
-    if (!this.shipped || !this.isTradeCreator()) {
-      return false;
-    }
-    return true;
+    return (this.status === 'shipped' && this.isTradeCreator());
+  },
+  archive() {
+    archive.call({ tradeId: this._id });
+  },
+  canArchive() {
+    return (['rejected', 'cancelled', 'received'].indexOf(this.status) >= 0 && this.isTradeCreator());
   }
 });
 

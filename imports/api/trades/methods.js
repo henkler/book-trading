@@ -23,8 +23,8 @@ export const cancel = new ValidatedMethod({
         'Unable to cancel trade');
     }
 
-    Trades.remove(tradeId);
-    Books.update(trade.bookId, { $set: { traded: false } });
+    Trades.update(tradeId, { $set: { status: 'cancelled' } });
+    Books.update(trade.bookId, { $set: { traded: false }, $unset: { tradeId: '' } });
   }
 });
 
@@ -46,7 +46,7 @@ export const accept = new ValidatedMethod({
         'Unable to accept trade');
     }
 
-    Trades.update(tradeId, { $set: { accepted: true, rejected: false } });
+    Trades.update(tradeId, { $set: { status: 'accepted' } });
   }
 });
 
@@ -68,8 +68,8 @@ export const reject = new ValidatedMethod({
         'Unable to reject trade');
     }
 
-    Trades.update(tradeId, { $set: { accepted: false, rejected: true } });
-    Books.update(trade.bookId, { $set: { traded: false } });
+    Trades.update(tradeId, { $set: { status: 'rejected' } });
+    Books.update(trade.bookId, { $set: { traded: false }, $unset: { tradeId: '' } });
   }
 });
 
@@ -91,7 +91,7 @@ export const ship = new ValidatedMethod({
         'Unable to ship trade');
     }
 
-    Trades.update(tradeId, { $set: { shipped: true } });
+    Trades.update(tradeId, { $set: { status: 'shipped' } });
   }
 });
 
@@ -113,6 +113,28 @@ export const receive = new ValidatedMethod({
         'Unable to receive trade');
     }
 
-    Trades.update(tradeId, { $set: { received: true } });
+    Trades.update(tradeId, { $set: { status: 'received' } });
+  }
+});
+
+export const archive = new ValidatedMethod({
+  name: 'trades.archive',
+  validate: new SimpleSchema({
+    tradeId: { type: String }
+  }).validator(),
+  run({ tradeId }) {
+    const trade = Trades.findOne(tradeId);
+
+    if (!trade) {
+      throw new Meteor.Error('trades.archive.accessDenied',
+        'Unable to find trade');
+    }
+
+    if (!trade.canArchive()) {
+      throw new Meteor.Error('trades.archive.accessDenied',
+        'Unable to archive trade');
+    }
+
+    Trades.update(tradeId, { $set: { status: 'archived' } });
   }
 });

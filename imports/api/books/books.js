@@ -67,6 +67,10 @@ Books.schema = new SimpleSchema({
     label: 'Has this book been traded',
     defaultValue: false
   },
+  tradeId: {
+    type: SimpleSchema.RegEx.Id,
+    optional: true
+  },
   createdAt: {
     type: Date,
     label: 'The date this Book was created',
